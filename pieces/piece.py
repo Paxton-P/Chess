@@ -18,3 +18,10 @@ class Piece:
 
     def findValidMoves(self):
         return
+
+    def validPos(posistion):
+        if posistion[0] <= 7 and posistion[0] >= 0 and posistion[1] <= 7 and posistion[1] >= 0:
+            return True
+        else:
+            return False
+            
