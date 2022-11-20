@@ -15,7 +15,7 @@ MARKER_DICT: dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100)
 OFFSET: np.array = np.array([-1.5, 1.5, 0], dtype=float).reshape((1, 3))
 WORLD_COORDS: np.array = np.array([(0, 0, 0), (0, -6, 0), (-6, -6, 0), (-6, 0, 0)], dtype=float)
 
-def project_board(bgr_img: np.array, board_img: np.array) -> tuple(np.array, bool):
+def project_board(bgr_img: np.array, board_img: np.array) -> tuple((np.array, bool)):
     # Projects a chess board onto an image
     # Inputs:
     #   bgr_img: The image (hopefully containing an ArUco marker) to project the board onto
