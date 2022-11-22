@@ -79,13 +79,14 @@ def project_board(bgr_img: np.array, board_img: np.array) -> tuple((np.array, np
     # return the outputs
     return (output_img, h, success)
 
-def coords_to_square(board_img: np.array, board_coords: tuple((int, int))) -> str:
+def coords_to_square(board_img: np.array, board_coords: tuple((int, int))) -> tuple((str, bool)):
     # Takes a position on the board and gets the corresponding chess board square
     # Inputs:
     #   board_img: The image of the board, used to get the height and width in pixels
     #   board_coords: A tuple of pixel locations on the board, as returned by a mouse callback function
     # Output:
     #   square: A string representing the square on the board, e.g. A1
+    #   success: A bool representing whether the click was on the board
 
     # Determing th height and width of the board image in pixels
     h: int = board_img.shape[0]
@@ -105,7 +106,9 @@ def coords_to_square(board_img: np.array, board_coords: tuple((int, int))) -> st
     elif h_norm < 0.75 : chr_1 = 'F'
     elif h_norm < 0.875: chr_1 = 'G'
     elif h_norm <= 1   : chr_1 = 'H'
-    else: chr_1 = 'Z'
+    else: 
+        chr_1 = 'Z'
+        success = False
 
     # Get the vertical portion of the square (1-8)
     chr_2: str
@@ -117,12 +120,14 @@ def coords_to_square(board_img: np.array, board_coords: tuple((int, int))) -> st
     elif v_norm < 0.75 : chr_2 = '3'
     elif v_norm < 0.875: chr_2 = '2'
     elif v_norm <= 1   : chr_2 = '1'
-    else: chr_2 = '0'
+    else: 
+        chr_2 = '0'
+        success = False
 
     # Combine chr_1 and chr_2 and return the result
     square: str = chr_1 + chr_2
 
-    return square
+    return (square, success)
 
 def get_xy(event, x, y, flags, param):
     # Appends the x and y coordinate of a left click to mouse_clicks
