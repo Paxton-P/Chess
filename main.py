@@ -5,6 +5,8 @@ from pieces.rook import Rook
 from pieces.bishop import Bishop
 from pieces.knight import Knight
 from pieces.queen import Queen
+from board_projection import project_board
+from chessBoard import ChessBoard
 
 from graphics.board import Board
 from graphics.boardDisplay import BoardDisplay
@@ -12,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 import cv2
+import sys
 
 #Black Pieces
 bp1 = Pawn((0,6),"black")
@@ -73,32 +76,73 @@ boardDict = {wp1.position: wp1, wp2.position: wp2, wp3.position: wp3, wp4.positi
 
 #boardDict = {}
 
+board = ChessBoard(boardDict)
+
 backgroundLocation = "chessBoardBlank.png"
 boardDisplayer = BoardDisplay(backgroundLocation)
+boardDisplayer.update(board.getBoardDict())
 
-boardDisplayer.display()
-
-boardDisplayer.update(boardDict)
-
-boardDisplayer.display()
+# boardDisplayer.display()
+# boardDisplayer.update(boardDict)
+# boardDisplayer.display()
 
 
-graphicsBoard = Board(750,750)
+#graphicsBoard = Board(750, 750)
 
 playing = True
 turn = "white"
 
+
+markerDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100)
+
+# marker1 = cv2.aruco.drawMarker(markerDict, 1, sidePixels=750)
+# cv2.imshow("Marker 1", marker1)
+#
+# marker2 = cv2.aruco.drawMarker(markerDict, 2, sidePixels=750)
+# cv2.imshow("Marker 2", marker2)
+#
+# cv2.imwrite("Marker1.png", marker1)
+# cv2.imwrite("Marker2.png", marker2)
+
+
+# Set up video capture from a USB camera
+video_capture = cv2.VideoCapture(index=0)
+got_img, bgr_img = video_capture.read()
+if not got_img:
+    print("Cannot read video source")
+    sys.exit()
+
+board_img = boardDisplayer.getDisplayImg()
+
 while playing:
-   print("Evaluation: ")
-   print(graphicsBoard.evaluate(boardDict))
-   boardDict = graphicsBoard.nextMove(boardDict, turn)
-   boardDisplayer.update(boardDict)
-   boardDisplayer.display()
-   if turn == "white":
+    got_img, bgr_img = video_capture.read()
+    # Project the board onto the current image and show it
+    projected_img, h, _ = project_board(bgr_img, board_img)
+    cv2.imshow("Chess", projected_img)
+    cv2.imshow("Board in 2D", board_img)
+    cv2.imshow("Camera Feed", bgr_img)
+
+    # print("Evaluation: ")
+    # print(graphicsBoard.evaluate(boardDict))
+    # boardDict = graphicsBoard.nextMove(boardDict, turn)
+    # boardDisplayer.update(boardDict)
+    # boardDisplayer.display()
+
+    key_pressed = cv2.waitKey(1) & 0xFF
+
+    if key_pressed == ord('m'):
+        print("pressed m")
+
+
+    if key_pressed == 27 or key_pressed == ord('q'):
+        break
+
+    if turn == "white":
       turn = "black"
-   elif turn == "black":
+    elif turn == "black":
       turn = "white"
 
 
 #chessBoard.drawBoard([bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bk, bq, br1, br2, bb1, bb2, bkn1, bkn2,
 #                      wp1, wp2, wp3, wp4, wp5, wp6, wp7, wp8, wk, wq, wr1, wr2, wb1, wb2, wkn1, wkn2])
+

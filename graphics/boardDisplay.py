@@ -63,3 +63,6 @@ class BoardDisplay:
     def display(self):
         cv2.imshow("Board Image",self.img.astype(np.uint8))
 
+    def getDisplayImg(self):
+        return self.img[:, :, 0:3].astype(np.uint8)
+
