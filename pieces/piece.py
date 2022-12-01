@@ -1,4 +1,6 @@
 class Piece:
+    value = 0
+
     def __init__(self, position, blackwhite):
         self.position = position
         self.alive = True

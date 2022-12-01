@@ -2,6 +2,8 @@ from .piece import Piece
 
 class Pawn(Piece):
 
+    value = 1
+
     def __init__(self, position, blackwhite):
         super().__init__(position, blackwhite)
         self.img = 'none'

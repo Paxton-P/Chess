@@ -14,8 +14,6 @@ class Board:
         self.moveIndicatorCol = "lightgrey"
 
     def nextMove(self, boardDict, turn):
-        print("New Move")
-        print(boardDict)
         origBoardDict = boardDict
         ptsMatrix = [[(0,0) for j in range(9)] for i in range(9)]
 
@@ -42,8 +40,6 @@ class Board:
                 print(piece)
                 pieceImage = Image(Point((piece.position[0]) * self.h/8 + self.h/8/2, (7 - piece.position[1]) * self.w/8 + self.w/8/2), piece.img)
                 pieceImage.draw(self.win)
-
-        #  print(boardDict)
 
         pieceLocation = (0,0)
 
@@ -96,7 +92,6 @@ class Board:
             if newLocationPos == pieceLocation:
                 #If the user selects the selected piece again then we look for new piece to be selected
                 print("Reselect")
-                print(origBoardDict)
                 return self.nextMove(origBoardDict, turn)
                 
             elif newLocationPos in validMoves:
@@ -115,7 +110,6 @@ class Board:
                 print("Updated board dict")
                 print(newLocationPos)
                 print(selectedPiece)
-                print(boardDict)
                 return boardDict
             
                     
@@ -126,3 +120,11 @@ class Board:
             notOver = False
 
 
+    def evaluate(self, boardDict):
+        eval = 0
+        for key in boardDict:
+            if boardDict[key].blackwhite == "white":
+                eval = eval + boardDict[key].value
+            else:
+                eval = eval - boardDict[key].value
+        return eval

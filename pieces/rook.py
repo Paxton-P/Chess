@@ -2,6 +2,8 @@ from .piece import Piece
 
 class Rook(Piece):
 
+    value = 5
+
     def __init__(self, position, blackwhite):
         super().__init__(position, blackwhite)
         self.img = 'none'
@@ -69,7 +71,5 @@ class Rook(Piece):
                         test = False
                 else:
                     validMoves.add(testPos)
-
-            #inc = tuple([sum(x) for x in zip(i, inc)])
 
         return validMoves

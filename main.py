@@ -7,8 +7,11 @@ from pieces.knight import Knight
 from pieces.queen import Queen
 
 from graphics.board import Board
+from graphics.boardDisplay import BoardDisplay
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+
+import cv2
 
 #Black Pieces
 bp1 = Pawn((0,6),"black")
@@ -68,17 +71,33 @@ boardDict = {wp1.position: wp1, wp2.position: wp2, wp3.position: wp3, wp4.positi
 
 #boardDict = {wk.position: wk, bk.position: bk}
 
+#boardDict = {}
+
+backgroundLocation = "chessBoardBlank.png"
+boardDisplayer = BoardDisplay(backgroundLocation)
+
+boardDisplayer.display()
+
+boardDisplayer.update(boardDict)
+
+boardDisplayer.display()
+
+
 graphicsBoard = Board(750,750)
 
 playing = True
 turn = "white"
 
 while playing:
-     boardDict = graphicsBoard.nextMove(boardDict, turn)
-     if turn == "white":
-        turn = "black"
-     elif turn == "black":
-        turn = "white"
+   print("Evaluation: ")
+   print(graphicsBoard.evaluate(boardDict))
+   boardDict = graphicsBoard.nextMove(boardDict, turn)
+   boardDisplayer.update(boardDict)
+   boardDisplayer.display()
+   if turn == "white":
+      turn = "black"
+   elif turn == "black":
+      turn = "white"
 
 
 #chessBoard.drawBoard([bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bk, bq, br1, br2, bb1, bb2, bkn1, bkn2,

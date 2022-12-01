@@ -2,6 +2,8 @@ from .piece import Piece
 
 class King(Piece):
 
+    value = 1000
+
     def __init__(self, position, blackwhite):
         super().__init__(position, blackwhite)
         self.img = 'none'
