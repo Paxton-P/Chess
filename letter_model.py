@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import emnist
 
 def main():
+    emnist.ensure_cached_data()
 
     (x_train, y_train) = emnist.extract_training_samples('letters')
     (x_test, y_test) = emnist.extract_test_samples('letters')

@@ -15,16 +15,20 @@ class ChessBoard:
         print(startLocation)
         print(endLocation)
         if startLocation not in self.boardDict:
-            print("Error: " + startLocation + " is not a valid piece location")
-            return
+            print("Error: " + str(startLocation[0]) + str(startLocation[1]) + " is not a valid piece location")
+            return False
         elif startLocation in self.boardDict:
             if self.boardDict[startLocation].blackwhite != turn:
                 print("Error: It is " + turn + "'s turn to play")
-
+                return False
 
             selectedPiece = self.boardDict[startLocation]
-
             validMoves = selectedPiece.findValidMoves(self.boardDict)
+
+            self.boardDict[endLocation] = selectedPiece
+            self.boardDict[endLocation].position = endLocation
+            self.boardDict.pop(startLocation)
+
             print(validMoves)
 
 
@@ -40,11 +44,11 @@ class ChessBoard:
         return eval
 
     def stringLocationToNumLocation(self, location):
-        numLoc = (0,0)
-        numLoc[0] = ord(location[0]) - 97
-        numLoc[1] = ord(location[1]) - 48
+        numLoc = [0,0]
+        numLoc[0] = ord(location[0]) - 65
+        numLoc[1] = location[1] - 1
 
-        return numLoc
+        return tuple(numLoc)
 
     def getBoardDict(self):
         return self.boardDict

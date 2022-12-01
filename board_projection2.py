@@ -6,7 +6,7 @@ import tensorflow as tf
 
 # Camera parameter constants: will change based on the camera you're using
 K: np.array = np.array([[1397.52735, 0, 652.871905], [0, 1397.20119, 332.295815], [0, 0, 1]], dtype=float)
-DIST_COEFFS: np.array = np.array([[ .0952372421,  .246188134,  .00101888992, -.000459210685, -2.40973476]], dtype=float)
+DIST_COEFFS: np.array = np.array([[.0952372421,  .246188134,  .00101888992, -.000459210685, -2.40973476]], dtype=float)
 
 # Marker constants: Assuming the marker is 2in x 2in and comes from a 4x4 marker of 100
 MARKER_SIZE: float = 2.0 #in
@@ -205,6 +205,13 @@ def extract_digit(img: np.array, index: int) -> tuple((np.array, bool)):
 
         img_pts, _ = cv2.projectPoints(objectPoints=DIGIT_COORDS, rvec=rvec, tvec=tvec, cameraMatrix=K, distCoeffs=DIST_COEFFS)
 
+    #    print(img_pts)
+    #    print(img_pts[0])
+        for pt in img_pts:
+            cv2.drawMarker(img, (int(pt[0][0]), int(pt[0][1])), color=(0,255,0))
+
+        cv2.imshow("Test", img)
+
         output_shape: tuple = (128, 128)
         output_pts: np.array = np.array([(0, 0), (0, output_shape[0]), (output_shape[1], output_shape[0]), (output_shape[1], 0)], dtype=float)
 
@@ -212,13 +219,26 @@ def extract_digit(img: np.array, index: int) -> tuple((np.array, bool)):
 
         digit_img = cv2.rotate(cv2.warpPerspective(img, h, (output_shape[1], output_shape[0])), cv2.ROTATE_90_COUNTERCLOCKWISE)
         grey_digit = cv2.cvtColor(digit_img, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("Gray Digit", grey_digit)
         thresh = cv2.adaptiveThreshold(grey_digit, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 111, 20)
-        # cv2.imshow("test", thresh)
+        cv2.imshow("test", thresh)
+        cv2.waitKey(0)
         # cv2.waitKey(0)
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        biggest_contour = max(contours, key=cv2.contourArea)
+        #Changed from contours, _ to countours, _, _
+        contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        #print(len(contours))
+        #print(contours[0])
+        res_img = np.zeros((128,128))
+       # img = cv2.drawContours(res_img, contours, -1, (0, 255, 75), 2)
+        #show_image(res_img)
+        cv2.imshow("Contours", contours[0])
+
+        cv2.waitKey(0)
+        #biggest_contour = max(contours, key=cv2.contourArea)
+        biggest_contour = contours[0]
         x, y, w, h = cv2.boundingRect(biggest_contour)
         just_digit = cv2.resize(thresh[y:y+h, x:x+w], (18, 18))
+        cv2.imshow("Just Digit", just_digit)
         # cv2.imshow("test", cv2.rectangle(digit_img, (x, y), (x+w, y+h), color=(0, 0, 255), thickness=1))
         # cv2.waitKey(0)
         output = np.pad(just_digit, ((5, 5), (5, 5)), "constant", constant_values=0)
@@ -239,8 +259,8 @@ def main() -> None:
         sys.exit()
 
     # Load letter and digit recognition models
-    digit_model = tf.keras.models.load_model('digit_model.h5')
-    letter_model = tf.keras.models.load_model('letter_model.h5')
+    digit_model = tf.keras.models.load_model("digit_model.h5")
+    letter_model = tf.keras.models.load_model("letter_model.h5")
     
     # Continually read in the video feed until esc or q is pressed
     while True:

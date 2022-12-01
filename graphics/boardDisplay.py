@@ -17,8 +17,6 @@ class BoardDisplay:
         self.img = boardImageBGR
         BoardDisplay.background = boardImageBGR
         self.boardImageLoc = boardImageLoc
-        print("in here")
-    
     def update(self, boardDict):
         boardImageBGR = cv2.imread(self.boardImageLoc)
         boardImageBGR = cv2.resize(boardImageBGR, dsize=(750, 750))
@@ -28,12 +26,6 @@ class BoardDisplay:
         self.img = boardImageBGR
 
         print(boardDict)
-
-        #self.img = BoardDisplay.background
-
-        cv2.imshow("Background", self.img.astype(np.uint8))
-
-
 
         for pieceLoc in boardDict:
             piece = boardDict[pieceLoc]
@@ -60,8 +52,10 @@ class BoardDisplay:
                 overlayedImg = (backgroundImg + cutOut)
                 self.img[y1:y2, x1:x2, c] = overlayedImg
 
+        cv2.imshow("Updating board image", self.img[:, :, 0:3].astype(np.uint8))
+
     def display(self):
-        cv2.imshow("Board Image",self.img.astype(np.uint8))
+        cv2.imshow("Board Image", self.img.astype(np.uint8))
 
     def getDisplayImg(self):
         return self.img[:, :, 0:3].astype(np.uint8)
