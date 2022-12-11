@@ -27,7 +27,7 @@ def main():
 
     cnn_model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
     n_epochs = 10
-    history = cnn_model.fit(x_train.reshape(-1, 28, 28 ,1), y_train, epochs=n_epochs, validation_data=(x_test.reshape(-1, 28, 28 ,1), y_test))
+    history = cnn_model.fit(x_train.reshape(-1, 28, 28, 1), y_train, epochs=n_epochs, validation_data=(x_test.reshape(-1, 28, 28, 1), y_test))
 
     cnn_model.save('./digit_model.h5', save_format='h5')
 

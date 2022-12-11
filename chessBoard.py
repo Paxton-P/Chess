@@ -25,12 +25,17 @@ class ChessBoard:
             selectedPiece = self.boardDict[startLocation]
             validMoves = selectedPiece.findValidMoves(self.boardDict)
 
-            self.boardDict[endLocation] = selectedPiece
-            self.boardDict[endLocation].position = endLocation
-            self.boardDict.pop(startLocation)
-
             print(validMoves)
 
+            if endLocation in validMoves:
+                self.boardDict[endLocation] = selectedPiece
+                self.boardDict[endLocation].position = endLocation
+                self.boardDict.pop(startLocation)
+            else:
+                print("Error: " + str(endLocation[0]) + str(endLocation[1]) +
+                      " is not a valid move for the selected piece. The selected piece was " + str(startLocation[0])
+                      + str(startLocation[1]))
+                return False
 
         return self.boardDict
 
